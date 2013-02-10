@@ -45,6 +45,6 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'capistrano'
 
 #przygotowuje aplikacje do deployu
-capify .
+#capify .
 
 gem 'will_paginate', '~> 3.0'
