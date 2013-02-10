@@ -7,6 +7,8 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class OrdersController < ApplicationController
+  skip_before_filter :authorize, only: [:create, :new]
+
   # GET /orders
   # GET /orders.json
   def index
@@ -80,7 +82,10 @@ class OrdersController < ApplicationController
   # PUT /orders/1.json
   def update
     @order = Order.find(params[:id])
-
+    
+    @order.attributes = params[:order]
+    OrderNotifier.order_changed(@order).deliver if @order.ship_date_changed?
+    
     respond_to do |format|
       if @order.update_attributes(params[:order])
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }

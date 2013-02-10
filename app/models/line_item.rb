@@ -15,4 +15,18 @@ class LineItem < ActiveRecord::Base
   def total_price
     product.price * quantity
   end
+  
+  def decrement_quantity
+    ## self.quantity =- 1 unless self.quantity.to_i == 0
+    ##update_attribute(:quantity, quantity =- 1) unless quantity
+    ## nie wywoluje collbackow!
+    #update_column 
+    ##
+    # save
+     
+     
+    # 
+    ## nie wywoluje collbackow!
+    self.quantity > 1 ? self.update_column(:quantity, self.quantity -= 1) : destroy
+  end
 end

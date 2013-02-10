@@ -22,10 +22,10 @@ Depot::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Don't actually send emails
-  config.action_mailer.delivery_method = :test
+#  config.action_mailer.delivery_method = :test
   #
   # Alternate configuration example, using gmail:
   #   config.action_mailer.delivery_method = :smtp

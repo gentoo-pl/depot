@@ -12,6 +12,9 @@
   <div id="banner">
     <%= image_tag("logo.png") %>
     <%= @page_title || "Pragmatic Bookshelf" %>
+    <div id="currentTime"><%= Time.now.strftime("%Y-%m-%d %H:%M") %></div>
+    
+
   </div>
   <div id="columns">
     <div id="side">
@@ -29,9 +32,28 @@
         <li><a href="http://www..../news">News</a></li>
         <li><a href="http://www..../contact">Contact</a></li>
       </ul>
+
+
+
+      <% if session[:user_id] %>
+        <ul>
+          <li><%= link_to('Orders', orders_path)%></li>
+          <li><%= link_to('Products', products_path)%></li>
+          <li><%= link_to('Users', users_path)%></li>
+        </ul>
+        <%= button_to 'Logout', logout_path, method: :delete %>
+      <% end %>
+
     </div>
     <div id="main">
       <%= yield %>
+    </div>
+    <div id="footer">
+      <% if  session[:visit_counter] && session[:visit_counter].to_i > 5 %>
+          Cart visit counter:  <%= pluralize(session[:visit_counter] || 0, "time") %> 
+      <% else %>
+          Hidden :)
+      <% end %>
     </div>
   </div>
 </body>

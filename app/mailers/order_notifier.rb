@@ -7,7 +7,7 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class OrderNotifier < ActionMailer::Base
-  default from: 'Sam Ruby <depot@example.com>'
+  default from: 'Sam Ruby <herman.smietnik@gmail.com>'
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
@@ -27,5 +27,10 @@ class OrderNotifier < ActionMailer::Base
   def shipped(order)
     @order = order
     mail to: order.email, subject: 'Pragmatic Store Order Shipped'
+  end
+  
+  def order_changed(order)
+    @order = order
+    mail to: order.email, subject: 'Pragmatic Store Order Changed'
   end
 end
