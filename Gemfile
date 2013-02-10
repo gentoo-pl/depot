@@ -42,9 +42,10 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # gem 'debugger'
 
 #bundle pack # wrzuca gemy do ktalogu aplikacji
+#przygotowuje aplikacje do deployu : #capify .
 gem 'capistrano'
 
-#przygotowuje aplikacje do deployu
-#capify .
+gem 'rvm-capistrano'
+
 
 gem 'will_paginate', '~> 3.0'
