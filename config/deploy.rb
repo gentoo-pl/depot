@@ -54,7 +54,8 @@ namespace :deploy do
   task :symlink_database_yml do
   	#shared_path -> helper capistrano
   	run "ln -fs #{shared_path}/database.yml #{current_path}/config/database.yml"
+  	after 'deploy:create_symlink', 'symlink_database_yml'
   end
 
-  after 'deploy:create_symlink', 'symlink_database_yml'
+
 end

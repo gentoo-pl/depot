@@ -8,6 +8,11 @@
 #---
 Depot::Application.routes.draw do
 
+  get "upload/new" => "upload#get"
+  post "upload/save"
+  get "upload/picture"
+  get "upload/show"
+
   get 'admin' => 'admin#index'
 
   controller :sessions do
