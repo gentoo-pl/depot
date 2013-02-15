@@ -49,4 +49,12 @@ namespace :deploy do
     run "cd #{current_path}; \
       rake db:seed RAILS_ENV=#{rails_env}"
   end
+
+  desc "symlink database.yml"
+  task :symlink_database_yml do
+  	#shared_path -> helper capistrano
+  	run "ln -fs #{shared_path}/database.yml #{current_path}/config/database.yml"
+  end
+
+  after 'deploy:create_symlink', 'symlink_database_yml'
 end
