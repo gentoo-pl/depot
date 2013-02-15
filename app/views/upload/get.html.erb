@@ -1,0 +1,24 @@
+<h1>Upload#get</h1>
+<p>Find me in app/views/upload/get.html.erb</p>
+
+
+<% if @picture.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@picture.errors.count, "error") %> prohibited this picture from being saved:</h2>
+
+      <ul>
+      <% @picture.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+
+<%= form_for(:picture, url: {action: 'save'}, html: {multipart: true}) do |f| %>
+	Comment: <%= f.text_field("comment") %><br />
+	Upload yor picture 
+	<%= f.file_field :uploaded_picture %><br />
+	<%= submit_tag "Upload" %>
+<% end %>
