@@ -7,13 +7,19 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class StoreController < ApplicationController
-	skip_before_filter :authorize
+	skip_before_filter :authorize, :search
 
   def index
     session[:visit_counter] ||= 0
     session[:visit_counter] += 1
     
-    @products = Product.order(:title)
+    @products = Product.published.order(:title)
     @cart = current_cart
+  end
+
+  def search
+  	@products = Product.where('title like ?', "%#{params[:title]}%")
+    # @products = Product.search params[:title]
+  	render :index
   end
 end

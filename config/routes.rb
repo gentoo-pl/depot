@@ -33,6 +33,8 @@ Depot::Application.routes.draw do
 
   resources :carts
 
+  get "search" => "store#search"
+
   get "store/index"
 
   resources :products do

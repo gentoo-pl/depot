@@ -7,9 +7,12 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class Product < ActiveRecord::Base
+  attr_accessible :title, :description, :published_at
   has_many :line_items
   has_many :orders, through: :line_items
   #...
+
+  scope :published, lambda { where('published_at >= ?', Time.zone.now )} ## Dzieki temu ze wsadzielm to w lambde w produkcyjnym bedzie wyszukiwac za kazdym razem
 
   before_destroy :ensure_not_referenced_by_any_line_item
 
@@ -23,6 +26,12 @@ class Product < ActiveRecord::Base
     message: 'must be a URL for GIF, JPG or PNG image.'
   }
   validates :title, length: {minimum: 10}
+
+
+
+  searchable do 
+    text :title, :description
+  end
 
   private
 
