@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<% if notice %><p id="notice"><%= notice  %></p><% end %>
 
 <p>
   <b>Title:</b>
@@ -23,3 +23,32 @@
 
 <%= link_to 'Edit', edit_product_path(@product) %> |
 <%= link_to 'Back', products_path %>
+
+
+
+<h2>Comments</h2>
+<% @comments.each do |c| %>
+
+	<div class="<%= cycle('list_line_odd', 'list_line_even')%>">
+			<p><b>Content: </b><%= c.content %></p>
+			<p><b>Rate: </b><%= c.rate %></p>
+			<p><b>Created at: </b><%= time_ago_in_words(c.created_at) %></p>
+	</div>
+	<hr />
+<% end %>
+
+<h2>Add new</h2>
+<%= form_for @product do |f| %>
+	<%= f.fields_for :comments, @comment do |c| %>
+		<div class="field">
+			<%= c.label :content %><br />
+			<%= c.text_field :content %>
+		</div>
+		<div class="field">
+			<%= c.label :rate %><br />
+			<%#= c.number_field :rate, :in => 1...5 %>
+			<%= c.select :rate, Comment::RATES, {include_blank: true}%>
+		</div>
+	<% end %>
+	<%= f.submit "Create comment", :name => nil %>
+<% end %>

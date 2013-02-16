@@ -8,6 +8,9 @@
 #---
 Depot::Application.routes.draw do
 
+  resources :comments
+
+
   get "upload/new" => "upload#get"
   post "upload/save"
   get "upload/picture"

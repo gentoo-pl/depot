@@ -18,8 +18,17 @@ class StoreController < ApplicationController
   end
 
   def search
-  	@products = Product.where('title like ?', "%#{params[:title]}%")
+  	# @products = Product.where('title like ?', "%#{params[:search]}%")
     # @products = Product.search params[:title]
+
+    @search = Product.search do
+      fulltext params[:search]
+      with(:published_at).less_than(Time.zone.now)   #tylko opublikowane
+      facet(:publish_month) #tworzy podgrupy wyszukiwania 
+      with(:publish_month, params[:month]) if params[:month].present?
+    end
+    @products = @search.results
+
   	render :index
   end
 end

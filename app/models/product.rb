@@ -7,12 +7,16 @@
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
 class Product < ActiveRecord::Base
-  attr_accessible :title, :description, :published_at
+  attr_accessible :title, :description, :published_at, :comments_attributes ## accepts_nested_attributes_for powinno to zalatwic, a nie chce :/
   has_many :line_items
+  has_many :comments
+  accepts_nested_attributes_for :comments, reject_if: :all_blank ## Nie puszcza jesli probujesz zapisac pusty obj
   has_many :orders, through: :line_items
+
+
   #...
 
-  scope :published, lambda { where('published_at >= ?', Time.zone.now )} ## Dzieki temu ze wsadzielm to w lambde w produkcyjnym bedzie wyszukiwac za kazdym razem
+  scope :published, lambda { where('published_at <= ?', Time.zone.now )} ## Dzieki temu ze wsadzielm to w lambde w produkcyjnym bedzie wyszukiwac za kazdym razem
 
   before_destroy :ensure_not_referenced_by_any_line_item
 
@@ -30,7 +34,19 @@ class Product < ActiveRecord::Base
 
 
   searchable do 
-    text :title, :description
+    # text rozbija na słowa
+    # string robi na pałę, szuka stałego stringa
+    text :title, boost: 5 # tytul będzie 5x bardziej istotny od opisu
+    text :description, :publish_month
+    text :comments do
+      comments.map(&:content) ## Alias : comments.map {|x| x.content }
+    end
+    time :published_at #tylko opublikowane
+    string :publish_month
+  end
+
+  def publish_month
+    published_at.strftime("%B %Y")
   end
 
   private
