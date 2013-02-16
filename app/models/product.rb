@@ -36,7 +36,9 @@ class Product < ActiveRecord::Base
   searchable do 
     # text rozbija na słowa
     # string robi na pałę, szuka stałego stringa
-    text :title, boost: 5 # tytul będzie 5x bardziej istotny od opisu
+    text :title, boost: 5 do # tytul będzie 5x bardziej istotny od opisu
+      transliterate(self.title) #Tworzy index bez polskich znaków, wtedy jak wyszukamy Łódź, albo Lodz to i ak znajdzie W kontrolerze tez trza poprawic
+    end
     text :description, :publish_month
     text :comments do
       comments.map(&:content) ## Alias : comments.map {|x| x.content }
@@ -50,6 +52,10 @@ class Product < ActiveRecord::Base
   end
 
   private
+
+  def transliterate(param)
+    ActiveSupport::Inflector.transliterate(param).downcase
+  end
 
     # ensure that there are no line items referencing this product
     def ensure_not_referenced_by_any_line_item

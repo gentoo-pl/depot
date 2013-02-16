@@ -4,31 +4,17 @@
 
 <h1>Your Pragmatic Catalog</h1>
 
-<%= form_tag search_path, method: :get do %>
+<% form_tag search_path, method: :get do %>
   <%= text_field_tag :search, params[:search] %>
   <%= submit_tag "Search", :name => nil %>
 <% end -%>
 
-<% unless params[:search].nil? %>
+<% unless params[:term].nil? %>
   Search results: <%= @products.size %><br />  
 <%end%>
+<%= text_field_tag :search, params[:term], 'data-autocomplete' => search_path(forma: :json) %>
+<%#= render 'facets' %>
 
-<div id="facets">
-  <% if @search %>
-    <h3>Published</h3>
-    <ul>
-        <% for row in @search.facet(:publish_month).rows %>
-          <li>
-            <% if params[:month].blank? %>
-              <%= link_to row.value, :month => row.value %>(<%= row.count %>)
-            <% else %>
-              <strong><%= row.value %></strong>(<%= link_to "remove", month: nil %>)
-            <% end %>
-          </li>
-        <% end -%>
-    </ul>
-  <% end -%>
-</div>
 
 <% @products.each do |product| %>
   <div class="entry">

@@ -9,6 +9,8 @@
 class StoreController < ApplicationController
 	skip_before_filter :authorize, :search
 
+  layout nil, only: [:search]
+
   def index
     session[:visit_counter] ||= 0
     session[:visit_counter] += 1
@@ -18,17 +20,53 @@ class StoreController < ApplicationController
   end
 
   def search
+    # 1:
   	# @products = Product.where('title like ?', "%#{params[:search]}%")
-    # @products = Product.search params[:title]
+    # 2:
+    # @search = Product.search do
+    #     fulltext ActiveSupport::Inflector.transliterate(params[:search]).downcase # szukam bez polskich znakow, wiecej info w modelu
+    #     with(:published_at).less_than(Time.zone.now)   #tylko opublikowane
+    #     facet(:publish_month) #tworzy podgrupy wyszukiwania 
+    #     with(:publish_month, params[:month]) if params[:month].present?
+    # end
+    # 3: render do jsona
+    term = ActiveSupport::Inflector.transliterate(params[:term]).downcase
+    words = term.split(/\s/)
+    prefix = words.shift #zciąga pierwszy element tablicy # chodzi o promowanie wynikow
 
-    @search = Product.search do
-      fulltext params[:search]
-      with(:published_at).less_than(Time.zone.now)   #tylko opublikowane
-      facet(:publish_month) #tworzy podgrupy wyszukiwania 
-      with(:publish_month, params[:month]) if params[:month].present?
+    full_words = words.join(' ')
+    all_fields = [:title, :description]
+
+    list = Sunspot.search(Product) do
+      keywords(full_words, fields: all_fields)
+      text_fields do |text_fields_query|
+        text_fields_query.any_of do |any_of_query|
+          all_fields.each do |text_field|
+            any_of_query.with(text_field).starting_with(prefix.downcase)
+          end
+        end
+      end
     end
-    @products = @search.results
 
-  	render :index
+    @data = []
+    list.each_hit_with_result do |hit, result|
+      @data << {
+        label: result.title,
+        id: result.id,
+        value: result.title,
+        description: "#{result.title}<br />#{result.description}",
+        link: product_path(result)
+      }
+    end
+
+
+    
+    # 1:
+    # @products = @search.results
+  	# render :index
+    # 3:
+    respond_to do |format|
+      format.json { render json: @data.uniq.to_json } # nei zapomnij dodac search.json
+    end
   end
 end

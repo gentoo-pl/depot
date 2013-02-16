@@ -22,4 +22,6 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
+//= jquery-migrate
+//= require autocomplete-rails
 //= require_tree .

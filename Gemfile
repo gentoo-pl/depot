@@ -55,4 +55,4 @@ group :development do
   gem 'sunspot_solr'
   gem 'progress_bar'
 end
-
+gem 'rails3-jquery-autocomplete'

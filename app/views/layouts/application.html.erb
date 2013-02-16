@@ -5,7 +5,17 @@
   <title>Pragprog Books Online Store</title>
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
+  <link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" type="text/css" rel="stylesheet"/>
   <%= csrf_meta_tags %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".ui-menu-item a").click(function() {
+        alert("cycki");      
+      });
+  
+});
+  </script>
+
 </head>
 <!-- END:head -->
 <body class="<%= controller.controller_name %>">
