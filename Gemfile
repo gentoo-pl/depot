@@ -53,4 +53,6 @@ gem "sunspot_rails" #biblioteka obslugujaca solar'a
 
 group :development do
   gem 'sunspot_solr'
+  gem 'progress_bar'
 end
+
